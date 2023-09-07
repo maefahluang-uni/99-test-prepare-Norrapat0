@@ -9,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
 //TODO: add annotation to scan for entities
+@EntityScan(basePackages = {"lab/end2end/concert/domain"})
 public class ConcertApplication {
     public static void main(String[] args) {
         SpringApplication.run(ConcertApplication.class, args);
@@ -20,7 +21,7 @@ public class ConcertApplication {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				//TODO: make sure the port of web front is correct.
-				registry.addMapping("/concerts").allowedOrigins("http://localhost:8081");
+				registry.addMapping("/concerts").allowedOrigins("http://localhost:8080");
 			}
 		};
 	}

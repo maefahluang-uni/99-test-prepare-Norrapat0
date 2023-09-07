@@ -1,41 +1,49 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Create and List Concerts</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
+
 <body>
     <h1>Create Concert</h1>
     <form id="createConcertForm">
         <h3>New Concert</h3>
         <label for="title">Title:</label>
         <input type="text" id="title" name="title" required><br><br>
+        <label for="dateTime">Date:</label>
+        <input type="datetime-local" id="dateTime" name="dateTime" required><br><br>
+        <label for="performer-name">performer's name:</label>
+        <input type="text" id="performer-name" name="performer-name" required><br><br>
+        <label for="performer-imageUri">performer's image URL:</label>
+        <input type="text" id="performer-imageUri" name="performer-imageUri" required><br><br>
         <!-- add more fields in this form -->
-        
         <button type="submit">Create Concert</button>
     </form>
-    
+
     <hr>
-    
+
     <h1>List Concerts</h1>
     <button id="reloadButton">Reload</button>
     <div id="concertList"></div>
-    
+
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Load concerts on 
-            function loadConcerts(){
+            function loadConcerts() {
                 $('#concertList').html(''); // Clear concert list
                 $.ajax({
-                    type: '', //TODO: add type
-                    url: '', //TODO: add url
-                    success: function(response) {
+                    type: 'GET', //TODO: add type
+                    url: '/api/concerts', //TODO: add url
+                    success: function (response) {
                         console.log('Concerts:', response);
-                        response.forEach(function(concert) {
+                        response.forEach(function (concert) {
                             //TODO: add concert details to concertList
+                            $('#concertList').append('<li>' + concert.title + ' - ' + concert.dateTime + '</li>');
                         });
                     },
-                    error: function(error) {
+                    error: function (error) {
                         console.error('Error loading concerts:', error);
                     }
                 });
@@ -43,37 +51,41 @@
 
             // Load concerts on page load
             loadConcerts();
-            
+
             // Reload button click event
-            $('#reloadButton').click(function() {
+            $('#reloadButton').click(function () {
                 loadConcerts();
             });
 
             // Handle form submission
-            $('#createConcertForm').submit(function(event) {
+            $('#createConcertForm').submit(function (event) {
                 event.preventDefault(); // Prevent default form submission
-                
+
                 // Prepare concert data as JSON
                 var concertData = {
                     title: $('#title').val(),
                     //TODO: add more fields and performer
+                    dateTime: $('#dateTime').val(),
+                    performerName: $('#performer-name').val(),
+                    performerImageUri: $('#performer-imageUri').val()
                 };
-                
+
                 //TODO: Send POST request to create concert
+
                 $.ajax({
-                    type: '', //TODO: add type
-                    url: '', //TODO: add url
+                    type: 'POST', //TODO: add type
+                    url: '/api/concerts', //TODO: add url
                     data: JSON.stringify(concertData),
                     contentType: 'application/json',
-                    success: function(response) {
+                    success: function (response) {
                         console.log('Concert created successfully:', response);
                         //TODO: reload concert list
                     },
-                    error: function(error) {
+                    error: function (error) {
                         console.error('Error creating concert:', error);
                     }
                 });
-                
+
                 // Reset form fields
                 $('#title').val('');
                 $('#dateTime').val('');
@@ -83,4 +95,5 @@
         });
     </script>
 </body>
+
 </html>
